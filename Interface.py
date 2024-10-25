@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Title of the page
-st.title("Loan Approval Prediction")
+st.title("Loan Approval Determinant")
 
 # Encodings for categorical variables
 gender_mapping = {"Male": 1, "Female": 0}
