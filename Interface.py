@@ -87,7 +87,7 @@ if st.button("Predict"):
     st.write("Encoded data for model prediction:", data)
 
     # Placeholder for prediction logic
-    st.success("Prediction submitted for processing.")
+   # st.success("Prediction submitted for processing.")
 
  # Convert the data dictionary to a 2D array for model prediction
    # data_array = np.array([list(data.values())])
