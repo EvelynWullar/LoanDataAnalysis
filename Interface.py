@@ -90,6 +90,11 @@ if st.button("Predict"):
  # Convert the data dictionary to a 2D array for model prediction
    # data_array = np.array([list(data.values())])
 
+    # Function to download file from Google Drive
+model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
+def download_file_from_google_drive(file_id):
+    download_url = f"https://drive.google.com/uc?id={model_file_id}&export=download"
+    response = requests.get(download_url)
 # Load the model from Google Drive
     model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
     model_content = download_file_from_google_drive(model_file_id)
