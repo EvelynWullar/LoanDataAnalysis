@@ -103,24 +103,24 @@ def download_file_from_google_drive(file_id):
 
 #https://drive.google.com/file/d/1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR/view?usp=sharing
     
-    if model_content:
+if model_content:
         # Save the model locally to Streamlit's local file system
-        save_model_locally(model_content, "model.pkl")
+    save_model_locally(model_content, "model.pkl")
 
         # Load the model from the locally saved file
-        try:
-            with open("model.pkl", "rb") as f:
-                model = pickle.load(f)
+        #try:
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-            # Make a prediction
-            prediction = model.predict(data)
+ # Make a prediction
+prediction = model.predict(data)
 
-            # Display the result
-            if prediction[0] == 1:
-                st.success("Loan Approved")
-            else:
-                st.error("Loan Denied")
-        except Exception as e:
-            st.error(f"Error during model prediction: {e}")
-    else:
-        st.error("Could not download or load the model.")
+# Display the result
+if prediction[0] == 1:
+    st.success("Loan Approved")
+else:
+    st.error("Loan Denied")
+        #except Exception as e:
+            #st.error(f"Error during model prediction: {e}")
+        #else:
+         #   st.error("Could not download or load the model.")
