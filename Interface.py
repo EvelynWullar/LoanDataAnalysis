@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pickle
+import numpy as np
 
 # Title of the page
 st.title("Loan Approval Determinant")
@@ -90,7 +91,7 @@ if st.button("Predict"):
    # st.success("Prediction submitted for processing.")
 
  # Convert the data dictionary to a 2D array for model prediction
-   # data_array = np.array([list(data.values())])
+   data_array = np.array([list(data.values())])
 
     # Function to download file from Google Drive
 model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
@@ -113,7 +114,7 @@ with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
  # Make a prediction
-prediction = model.predict(data)
+prediction = model.predict(data_array)
 
 # Display the result
 if prediction[0] == 1:
