@@ -1,4 +1,6 @@
 import streamlit as st
+import request
+import pickle
 
 # Title of the page
 st.title("Loan Approval Determinant")
