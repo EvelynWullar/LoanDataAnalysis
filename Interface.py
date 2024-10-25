@@ -88,8 +88,14 @@ if st.button("Predict"):
     st.success("Prediction submitted for processing.")
 
  # Convert the data dictionary to a 2D array for model prediction
-   # data_array = np.array([list(data.values())])
+    data_array = np.array([list(data.values())])
 
+# Load the model from Google Drive
+    model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
+    model_content = download_file_from_google_drive(model_file_id)
+
+#https://drive.google.com/file/d/1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR/view?usp=sharing
+    
     if model_content:
         # Save the model locally to Streamlit's local file system
         save_model_locally(model_content, "model.pkl")
@@ -100,7 +106,7 @@ if st.button("Predict"):
                 model = pickle.load(f)
 
             # Make a prediction
-            prediction = model.predict(data)
+            prediction = model.predict(data_array)
 
             # Display the result
             if prediction[0] == 1:
