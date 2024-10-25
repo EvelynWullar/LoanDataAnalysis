@@ -88,7 +88,7 @@ if st.button("Predict"):
     st.success("Prediction submitted for processing.")
 
  # Convert the data dictionary to a 2D array for model prediction
-    data_array = np.array([list(data.values())])
+   # data_array = np.array([list(data.values())])
 
     if model_content:
         # Save the model locally to Streamlit's local file system
@@ -100,7 +100,7 @@ if st.button("Predict"):
                 model = pickle.load(f)
 
             # Make a prediction
-            prediction = model.predict(data_array)
+            prediction = model.predict(data)
 
             # Display the result
             if prediction[0] == 1:
