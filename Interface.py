@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 
 # Title of the page
-st.title("Loan Approval Determinant")
+st.title("Loan Approval Prediction")
 
 # Encodings for categorical variables
 gender_mapping = {"Male": 1, "Female": 0}
@@ -44,7 +44,7 @@ with col4:
 col5, col6, col7, col8 = st.columns(4)
 
 with col5:
-    loan_term = st.number_input("Loan Term (Months)", min_value=0, step=1)
+    loan_term = st.number_input("Loan Term (Months)", min_value=12, step=12)
 
 with col6:
     credit_history = st.selectbox("Credit History", options=["Good", "Poor"], index=0)
@@ -63,6 +63,35 @@ with col8:
     st.write(f"Income-to-Loan Ratio: {income_to_loan_ratio:.2f}")
     st.write(f"Total Income: {total_income:.2f}")
     st.write(f"Income per Term: {income_per_term:.2f}")
+
+# Function to download the model file from Google Drive
+file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
+def download_file_from_google_drive(file_id):
+    download_url = f"https://drive.google.com/uc?id={file_id}&export=download"
+    response = requests.get(download_url)
+    
+    # Handle potential Google Drive confirmation pages
+    if 'content-disposition' not in response.headers:
+        # Try to handle Google Drive confirmation redirects
+        confirm_token = None
+        for key, value in response.cookies.items():
+            if key.startswith('download_warning'):
+                confirm_token = value
+        if confirm_token:
+            download_url = f"https://drive.google.com/uc?id={file_id}&export=download&confirm={confirm_token}"
+            response = requests.get(download_url)
+    
+    # Check if the response is valid
+    if response.status_code == 200:
+        return response.content
+    else:
+        st.error(f"Failed to download file from Google Drive. Status code: {response.status_code}")
+        return None
+
+# Function to save the model locally
+def save_model_locally(content, filename):
+    with open(filename, 'wb') as f:
+        f.write(content)
 
 # Submit button to predict loan approval
 if st.button("Predict"):
@@ -84,44 +113,31 @@ if st.button("Predict"):
         "Income per Term": income_per_term
     }
     
-    # Show the encoded data
-    st.write("Encoded data for model prediction:", data)
+    # Convert the data dictionary to a 2D array for model prediction
+    data_array = np.array([list(data.values())])
 
-    # Placeholder for prediction logic
-   # st.success("Prediction submitted for processing.")
+    # Load the model from Google Drive
+    model_file_id = '1pnWNdNT8RSRxSz5XtzjeGOCIAOaCW-xj'
+    model_content = download_file_from_google_drive(model_file_id)
 
- # Convert the data dictionary to a 2D array for model prediction
-data_array = np.array([list(data.values())])
-
-    # Function to download file from Google Drive
-model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
-def download_file_from_google_drive(file_id):
-    download_url = f"https://drive.google.com/uc?id={model_file_id}&export=download"
-    response = requests.get(download_url)
-#Load the model from Google Drive
-model_file_id = '1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR'
-model_content = download_file_from_google_drive(model_file_id)
-
-#https://drive.google.com/file/d/1ipYor15saV8MAvj_ZhmmU6JPLX5ZAevR/view?usp=sharing
-    
-if model_content:
+    if model_content:
         # Save the model locally to Streamlit's local file system
-    save_model_locally(model_content, "model.pkl")
+        save_model_locally(model_content, "loan_model.pkl")
 
         # Load the model from the locally saved file
-        #try:
-with open("model.pkl", "rb") as f:
-    model = pickle.load(f)
+        try:
+            with open("loan_model.pkl", "rb") as f:
+                model = pickle.load(f)
 
- # Make a prediction
-prediction = model.predict(data_array)
+            # Make a prediction
+            prediction = model.predict(data_array)
 
-# Display the result
-if prediction[0] == 1:
-    st.success("Loan Approved")
-else:
-    st.error("Loan Denied")
-        #except Exception as e:
-            #st.error(f"Error during model prediction: {e}")
-        #else:
-         #   st.error("Could not download or load the model.")
+            # Display the result
+            if prediction[0] == 1:
+                st.success("Loan Approved")
+            else:
+                st.error("Loan Denied")
+        except Exception as e:
+            st.error(f"Error during model prediction: {e}")
+    else:
+        st.error("Could not download or load the model.")
